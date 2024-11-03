@@ -15,7 +15,7 @@ import io.cucumber.junit.CucumberOptions;
 @RunWith(Cucumber.class)
 @CucumberOptions
 		(
-				features = {".//Features/"}, //feature file location
+				features = {".//Features/login.feature"}, //feature file location
 				glue = "stepDefinitions", //steps implementation location
 				dryRun = false, //it checks for each feature step corresponding method
 				monochrome = true, // removes unnecessary characters from console window
@@ -23,7 +23,7 @@ import io.cucumber.junit.CucumberOptions;
 						"html:target/cucumber-reports/reports_html.html", //generate the report under test-output folder
 						"json:target/cucumber-reports/report_json.json"
 				}, //report
-				tags = "@sanity" //"@sanity or @regression" / "@sanity and @regression"
+				tags = "@sanity1" //"@sanity or @regression" / "@sanity and @regression"
 		)
 public class TestRun {
 	

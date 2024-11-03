@@ -3,19 +3,26 @@
  */
 package stepDefinitions;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -67,7 +74,31 @@ public class Steps extends BaseClass{
 	    }
 
 	    @After
-	    public void teardown() {
+	    public void teardown(Scenario sc) throws IOException 
+	    {
+	    	if(sc.isFailed())
+	    	{
+	    		String timeStamp = new SimpleDateFormat("yyyy-MM-dd-hh_mm_ss").format(new Date());
+	    		
+	    		String imagePath = "C:\\Users\\deepa\\git\\ParaBank_V001_cucumber\\ParaBank_V001_cucumber\\screenshot\\failedTest"+"_"+timeStamp+".png";
+	    		TakesScreenshot scrshot = (TakesScreenshot)driver; //convert webdriver object to TakeScreenshot
+	    		
+	    		//Call getScreenshotAs method to create image file
+	    		File srcFile = scrshot.getScreenshotAs(OutputType.FILE);
+	    		
+	    		//move image file to the new destination
+	    		File destFile = new File(imagePath);
+	    		try
+	    		{
+		    		//copy the file destination
+		    		FileUtils.copyFile(srcFile, destFile);
+	    		}
+	    		catch (IOException e) 
+	    		{
+	    			e.printStackTrace();
+				}
+	    	}
+	    	
 	        if (driver != null) {
 	            driver.quit();
 	        }
@@ -242,4 +273,31 @@ public class Steps extends BaseClass{
 //	    Assert.assertEquals(accountOpened, actualMessage);
 	}
 
+	// Transfer Funds
+	@When("User click on Transfer funds")
+	public void user_click_on_transfer_funds() 
+	{
+		dp.clickTransferFunds();	    
+	}
+	
+	@When("Enter amount to transfer as {string}")
+	public void enter_amount_to_transfer_as(String amount)
+	{
+		dp.enterAmount(amount);
+	}
+	@When("click Transfer")
+	public void click_transfer() 
+	{
+	    dp.clickTransfer();
+	}
+	
+	@Then("User can see confirmation message containing {string}")
+	public void user_can_see_confirmation_message_containing(String expectedKeyword) 
+	{
+	    logger.info("**** Validate dynamic confirmation message *****");
+
+	    String actualMessage = dp.confirmTransfer();
+	    Assert.assertTrue("The confirmation message does not contain the expected keyword.",
+	            actualMessage.contains(expectedKeyword));
+	}
 }

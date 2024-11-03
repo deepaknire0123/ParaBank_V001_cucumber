@@ -38,6 +38,19 @@ public class DashboardPage extends BasePage{
 	@FindBy(xpath = "//p[contains(text(), 'Congratulations, your account is now open')]")
 	WebElement msgCnfAccountOpen;
 	
+	@FindBy(xpath = "//a[normalize-space()='Transfer Funds']")
+	WebElement lnkTransferFunds;
+	
+	@FindBy(xpath = "//input[@id='amount']")
+	WebElement txtAmount;
+	
+	@FindBy(xpath = "//input[@value='Transfer']")
+	WebElement btnTransfer;
+	
+	@FindBy(xpath = "//h1[normalize-space()='Transfer Complete!']")
+	WebElement msgTransferComplete;
+
+	
 	public void clickOpenNewAccount()
 	{
 		lnkOpenNewAccount.click();
@@ -66,6 +79,27 @@ public class DashboardPage extends BasePage{
 		lnkLogout.click();
 	}
 	
+	public void clickTransferFunds()
+	{
+		lnkTransferFunds.click();
+	}
+	
+	public void enterAmount(String amount)
+	{
+		txtAmount.sendKeys(amount);
+	}
+	
+	public void clickTransfer()
+	{
+		btnTransfer.click();
+	}
+	
+	public String confirmTransfer()
+	{
+		WebDriverWait wait = new WebDriverWait(ldriver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.visibilityOf(msgTransferComplete));
+		return msgTransferComplete.getText();
+	}
 
 
 }
